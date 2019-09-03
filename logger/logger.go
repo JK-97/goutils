@@ -41,13 +41,11 @@ type Logger interface {
 // Configuration stores the config for the logger
 // For some loggers there can only be one level across writers, for such the level of Console is picked by default
 type Configuration struct {
-	// ConsoleJSONFormat bool
-	// ConsoleLevel      string
 	IsProduction bool
 }
 
-//NewLogger returns an instance of logger
-func NewLogger(config Configuration) error {
+//SetLoggerConfig sets logger configuration
+func SetLoggerConfig(config Configuration) error {
 	logger, err := newZapLogger(config)
 	if err != nil {
 		return err
