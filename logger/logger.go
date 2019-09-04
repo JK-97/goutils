@@ -1,3 +1,5 @@
+// reference: https://www.mountedthoughts.com/golang-logger-interface/
+
 package logger
 
 // A global variable so that log functions can be directly accessed
