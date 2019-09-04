@@ -41,9 +41,9 @@ func newZapLogger(config Configuration) (Logger, error) {
 		err    error
 	)
 	if config.IsProduction {
-		logger, err = zap.NewProduction()
+		logger, err = zap.NewProduction(zap.AddCallerSkip(2))
 	} else {
-		logger, err = zap.NewDevelopment()
+		logger, err = zap.NewDevelopment(zap.AddCallerSkip(2))
 	}
 	if err != nil {
 		return nil, err
