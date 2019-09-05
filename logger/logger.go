@@ -46,6 +46,10 @@ type Configuration struct {
 	IsProduction bool
 }
 
+func init() {
+	SetLoggerConfig(Configuration{})
+}
+
 //SetLoggerConfig sets logger configuration
 func SetLoggerConfig(config Configuration) error {
 	logger, err := newZapLogger(config)
