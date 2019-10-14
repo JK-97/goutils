@@ -47,7 +47,10 @@ type Configuration struct {
 }
 
 func init() {
-	SetLoggerConfig(Configuration{})
+	err := SetLoggerConfig(Configuration{})
+	if err != nil {
+		panic(err)
+	}
 }
 
 //SetLoggerConfig sets logger configuration

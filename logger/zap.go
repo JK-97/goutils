@@ -48,7 +48,9 @@ func newZapLogger(config Configuration) (Logger, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &zapLogger{logger.Sugar()}, err
+	return &zapLogger{
+		sugaredLogger: logger.Sugar(),
+	}, err
 
 	// cores := []zapcore.Core{}
 
