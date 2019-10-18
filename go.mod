@@ -1,4 +1,4 @@
-module gitlab.jiangxingai.com/applications/base-modules/internal-sdk/go-utils/logger
+module gitlab.jiangxingai.com/applications/base-modules/internal-sdk/go-utils
 
 go 1.13
 
