@@ -36,41 +36,24 @@ func getZapLevel(level string) zapcore.Level {
 }
 
 func newZapLogger(config Configuration) (Logger, error) {
-	var (
-		logger *zap.Logger
-		err    error
-	)
+	var zapConfig zap.Config
+
 	if config.IsProduction {
-		logger, err = zap.NewProduction(zap.AddCallerSkip(2))
+		zapConfig = zap.NewProductionConfig()
 	} else {
-		logger, err = zap.NewDevelopment(zap.AddCallerSkip(2))
+		zapConfig = zap.NewDevelopmentConfig()
 	}
+	if config.Level != "" {
+		zapConfig.Level = zap.NewAtomicLevelAt(getZapLevel(config.Level))
+	}
+
+	logger, err := zapConfig.Build(zap.AddCallerSkip(2))
 	if err != nil {
 		return nil, err
 	}
 	return &zapLogger{
 		sugaredLogger: logger.Sugar(),
 	}, err
-
-	// cores := []zapcore.Core{}
-
-	// level := getZapLevel(config.ConsoleLevel)
-	// writer := zapcore.Lock(os.Stdout)
-	// core := zapcore.NewCore(getEncoder(config.ConsoleJSONFormat), writer, level)
-	// cores = append(cores, core)
-
-	// combinedCore := zapcore.NewTee(cores...)
-
-	// // AddCallerSkip skips 2 number of callers, this is important else the file that gets
-	// // logged will always be the wrapped file. In our case zap.go
-	// logger := zap.New(combinedCore,
-	// 	zap.AddCallerSkip(2),
-	// 	zap.AddCaller(),
-	// ).Sugar()
-
-	// return &zapLogger{
-	// 	sugaredLogger: logger,
-	// }, nil
 }
 
 func (l *zapLogger) Debugf(format string, args ...interface{}) {
