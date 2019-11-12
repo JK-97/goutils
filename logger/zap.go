@@ -1,6 +1,8 @@
 package logger
 
 import (
+	"fmt"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -111,4 +113,19 @@ func (l *zapLogger) WithFields(fields Fields) Logger {
 	}
 	newLogger := l.sugaredLogger.With(f...)
 	return &zapLogger{newLogger}
+}
+
+const (
+	TextBlack = iota + 30
+	TextRed
+	TextGreen
+	TextYellow
+	TextBlue
+	TextMagenta
+	TextCyan
+	TextWhite
+)
+
+func SetColor(msg string, conf, bg, text int) string {
+	return fmt.Sprintf("%c[%d;%d;%dm%s%c[0m", 0x1B, conf, bg, text, msg, 0x1B)
 }
