@@ -2,6 +2,8 @@
 
 package logger
 
+import "time"
+
 // A global variable so that log functions can be directly accessed
 var log Logger
 
@@ -114,4 +116,17 @@ func Panic(args ...interface{}) {
 
 func WithFields(keyValues Fields) Logger {
 	return log.WithFields(keyValues)
+}
+
+var HTTPTimestampFormat = "2006/01/02 - 15:04:05"
+
+// LogHTTP 记录 HTTP 请求
+func LogHTTP(timestamp time.Time, statusCode int, clientIP, method, path string, latency time.Duration, errorMessage string) {
+
+	if latency > time.Minute {
+		// Truncate in a golang < 1.8 safe way
+		latency = latency - latency%time.Second
+	}
+
+	log.Infof("%v - %3d - %13v - %15s - %-7s %s - %s", timestamp.Format(HTTPTimestampFormat), statusCode, latency, clientIP, method, path, errorMessage)
 }
