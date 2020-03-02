@@ -8,7 +8,7 @@ import (
 )
 
 type zapLogger struct {
-	sugaredLogger *zap.SugaredLogger
+	*zap.SugaredLogger
 }
 
 func getEncoder(isJSON bool) zapcore.Encoder {
@@ -49,63 +49,13 @@ func newZapLogger(config Configuration) (Logger, error) {
 		zapConfig.Level = zap.NewAtomicLevelAt(getZapLevel(config.Level))
 	}
 
-	logger, err := zapConfig.Build(
-		zap.AddCaller(),
-		zap.AddCallerSkip(2),
-	)
+	logger, err := zapConfig.Build()
 	if err != nil {
 		return nil, err
 	}
 	return &zapLogger{
-		sugaredLogger: logger.Sugar(),
+		SugaredLogger: logger.Sugar(),
 	}, err
-}
-
-func (l *zapLogger) Debugf(format string, args ...interface{}) {
-	l.sugaredLogger.Debugf(format, args...)
-}
-
-func (l *zapLogger) Infof(format string, args ...interface{}) {
-	l.sugaredLogger.Infof(format, args...)
-}
-
-func (l *zapLogger) Warnf(format string, args ...interface{}) {
-	l.sugaredLogger.Warnf(format, args...)
-}
-
-func (l *zapLogger) Errorf(format string, args ...interface{}) {
-	l.sugaredLogger.Errorf(format, args...)
-}
-
-func (l *zapLogger) Fatalf(format string, args ...interface{}) {
-	l.sugaredLogger.Fatalf(format, args...)
-}
-
-func (l *zapLogger) Panicf(format string, args ...interface{}) {
-	l.sugaredLogger.Fatalf(format, args...)
-}
-
-func (l *zapLogger) Debug(args ...interface{}) {
-	l.sugaredLogger.Debug(args...)
-}
-
-func (l *zapLogger) Info(args ...interface{}) {
-	l.sugaredLogger.Info(args...)
-}
-
-func (l *zapLogger) Warn(args ...interface{}) {
-	l.sugaredLogger.Warn(args...)
-}
-func (l *zapLogger) Error(args ...interface{}) {
-	l.sugaredLogger.Error(args...)
-}
-
-func (l *zapLogger) Fatal(args ...interface{}) {
-	l.sugaredLogger.Fatal(args...)
-}
-
-func (l *zapLogger) Panic(args ...interface{}) {
-	l.sugaredLogger.Panic(args...)
 }
 
 func (l *zapLogger) WithFields(fields Fields) Logger {
@@ -114,7 +64,7 @@ func (l *zapLogger) WithFields(fields Fields) Logger {
 		f = append(f, k)
 		f = append(f, v)
 	}
-	newLogger := l.sugaredLogger.With(f...)
+	newLogger := l.SugaredLogger.With(f...)
 	return &zapLogger{newLogger}
 }
 

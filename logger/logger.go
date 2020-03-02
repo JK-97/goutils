@@ -23,6 +23,12 @@ const (
 	FatalLevel = "fatal"
 )
 
+// LogFunc logs a message.
+type LogFunc func(args ...interface{})
+
+// LogFormatFunc uses fmt.Sprintf to log a templated message.
+type LogFormatFunc func(format string, args ...interface{})
+
 // Logger is our contract for the logger
 type Logger interface {
 	Debugf(format string, args ...interface{})
@@ -63,61 +69,47 @@ func SetLoggerConfig(config Configuration) error {
 		return err
 	}
 	log = logger
+	SetLogger(logger)
 	return nil
 }
 
-func Debugf(format string, args ...interface{}) {
-	log.Debugf(format, args...)
+// Package funcs
+var (
+	Debugf LogFormatFunc
+	Infof  LogFormatFunc
+	Warnf  LogFormatFunc
+	Errorf LogFormatFunc
+	Fatalf LogFormatFunc
+	Panicf LogFormatFunc
+
+	Debug LogFunc
+	Info  LogFunc
+	Warn  LogFunc
+	Error LogFunc
+	Fatal LogFunc
+	Panic LogFunc
+
+	WithFields func(keyValues Fields) Logger
+)
+
+// SetLogger 设置 Logger
+func SetLogger(l Logger) {
+	Debugf = l.Debugf
+	Infof = l.Infof
+	Warnf = l.Warnf
+	Errorf = l.Errorf
+	Fatalf = l.Fatalf
+	Panicf = l.Panicf
+	Debug = l.Debug
+	Info = l.Info
+	Warn = l.Warn
+	Error = l.Error
+	Fatal = l.Fatal
+	Panic = l.Panic
+	WithFields = l.WithFields
 }
 
-func Infof(format string, args ...interface{}) {
-	log.Infof(format, args...)
-}
-
-func Warnf(format string, args ...interface{}) {
-	log.Warnf(format, args...)
-}
-
-func Errorf(format string, args ...interface{}) {
-	log.Errorf(format, args...)
-}
-
-func Fatalf(format string, args ...interface{}) {
-	log.Fatalf(format, args...)
-}
-
-func Panicf(format string, args ...interface{}) {
-	log.Panicf(format, args...)
-}
-
-func Debug(args ...interface{}) {
-	log.Debug(args...)
-}
-
-func Info(args ...interface{}) {
-	log.Info(args...)
-}
-
-func Warn(args ...interface{}) {
-	log.Warn(args...)
-}
-
-func Error(args ...interface{}) {
-	log.Error(args...)
-}
-
-func Fatal(args ...interface{}) {
-	log.Fatal(args...)
-}
-
-func Panic(args ...interface{}) {
-	log.Panic(args...)
-}
-
-func WithFields(keyValues Fields) Logger {
-	return log.WithFields(keyValues)
-}
-
+// HTTPTimestampFormat 打印 HTTP 日志使用的时间格式
 var HTTPTimestampFormat = "2006/01/02 - 15:04:05"
 
 // LogHTTP 记录 HTTP 请求
