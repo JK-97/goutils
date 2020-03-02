@@ -49,7 +49,10 @@ func newZapLogger(config Configuration) (Logger, error) {
 		zapConfig.Level = zap.NewAtomicLevelAt(getZapLevel(config.Level))
 	}
 
-	logger, err := zapConfig.Build(zap.AddCallerSkip(2))
+	logger, err := zapConfig.Build(
+		zap.AddCaller(),
+		zap.AddCallerSkip(2),
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -115,6 +118,7 @@ func (l *zapLogger) WithFields(fields Fields) Logger {
 	return &zapLogger{newLogger}
 }
 
+// 常用颜色
 const (
 	TextBlack = iota + 30
 	TextRed
@@ -126,6 +130,7 @@ const (
 	TextWhite
 )
 
+// SetColor 设置颜色
 func SetColor(msg string, conf, bg, text int) string {
 	return fmt.Sprintf("%c[%d;%d;%dm%s%c[0m", 0x1B, conf, bg, text, msg, 0x1B)
 }

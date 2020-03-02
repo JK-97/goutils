@@ -7,8 +7,8 @@ import "time"
 // A global variable so that log functions can be directly accessed
 var log Logger
 
-//Fields Type to pass when we want to call WithFields for structured logging
-type Fields map[string]interface{}
+// Fields Type to pass when we want to call WithFields for structured logging
+type Fields = map[string]interface{}
 
 const (
 	//DebugLevel has verbose message
@@ -23,7 +23,7 @@ const (
 	FatalLevel = "fatal"
 )
 
-//Logger is our contract for the logger
+// Logger is our contract for the logger
 type Logger interface {
 	Debugf(format string, args ...interface{})
 	Infof(format string, args ...interface{})
@@ -56,7 +56,7 @@ func init() {
 	}
 }
 
-//SetLoggerConfig sets logger configuration
+// SetLoggerConfig sets logger configuration
 func SetLoggerConfig(config Configuration) error {
 	logger, err := newZapLogger(config)
 	if err != nil {
