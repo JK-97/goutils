@@ -48,8 +48,14 @@ func newZapLogger(config Configuration) (Logger, error) {
 	if config.Level != "" {
 		zapConfig.Level = zap.NewAtomicLevelAt(getZapLevel(config.Level))
 	}
+	var opts []zap.Option
 
-	logger, err := zapConfig.Build()
+	if config.CallerSkip > 0 {
+		opts = append(opts, zap.AddCaller(), zap.AddCallerSkip(config.CallerSkip))
+	}
+
+	logger, err := zapConfig.Build(opts...)
+
 	if err != nil {
 		return nil, err
 	}
