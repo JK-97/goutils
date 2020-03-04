@@ -53,6 +53,7 @@ type Logger interface {
 type Configuration struct {
 	IsProduction bool
 	Level        string
+	CallerSkip   int
 }
 
 func init() {
