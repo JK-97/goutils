@@ -54,6 +54,7 @@ type Configuration struct {
 	IsProduction bool
 	Level        string
 	CallerSkip   int
+	Fields       Fields
 }
 
 func init() {
@@ -72,6 +73,11 @@ func SetLoggerConfig(config Configuration) error {
 	log = logger
 	SetLogger(logger)
 	return nil
+}
+
+// GetLogger 获取当前使用的 Logger
+func GetLogger() Logger {
+	return log
 }
 
 // Package funcs

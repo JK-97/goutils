@@ -54,22 +54,38 @@ func newZapLogger(config Configuration) (Logger, error) {
 		opts = append(opts, zap.AddCaller(), zap.AddCallerSkip(config.CallerSkip))
 	}
 
+	if config.Fields != nil {
+		var fields []zap.Field
+
+		for k, v := range config.Fields {
+			fields = append(fields, zap.Any(k, v))
+		}
+
+		if len(fields) > 0 {
+			opts = append(opts, zap.Fields(fields...))
+		}
+	}
+
 	logger, err := zapConfig.Build(opts...)
 
 	if err != nil {
 		return nil, err
 	}
+
 	return &zapLogger{
 		SugaredLogger: logger.Sugar(),
 	}, err
 }
 
 func (l *zapLogger) WithFields(fields Fields) Logger {
-	var f = make([]interface{}, 0)
-	for k, v := range fields {
-		f = append(f, k)
-		f = append(f, v)
+	if fields == nil {
+		return &zapLogger{l.SugaredLogger}
 	}
+	var f = make([]interface{}, 0, len(fields))
+	for k, v := range fields {
+		f = append(f, zap.Any(k, v))
+	}
+
 	newLogger := l.SugaredLogger.With(f...)
 	return &zapLogger{newLogger}
 }
