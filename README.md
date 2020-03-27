@@ -17,14 +17,14 @@ go mod init
 添加 git 子模块
 
 ```bash
-git submodule add http://gitlab.jiangxingai.com/applications/base-modules/internal-sdk/go-utils.git
+git submodule add github.com/JK-97/go-utils.git
 ```
 
 替换依赖为本地版本
 
 ```bash
-go mod edit -require gitlab.jiangxingai.com/applications/base-modules/internal-sdk/go-utils@v0.0.0-00010101000000-000000000000
-go mod edit -replace gitlab.jiangxingai.com/applications/base-modules/internal-sdk/go-utils=./go-utils
+go mod edit -require github.com/JK-97/go-utils.git
+go mod edit -replace github.com/JK-97/go-utils.git=./go-utils
 ```
 
 ### 更新使用的 SDK 版本
