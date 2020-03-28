@@ -1,4 +1,4 @@
-module gitlab.jiangxingai.com/applications/base-modules/internal-sdk/go-utils
+module github.com/JK-97/go-utils.git
 
 go 1.13
 
